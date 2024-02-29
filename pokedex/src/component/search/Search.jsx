@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Search.css";
+import useDebounce from "../Hooks/useDebounce";
 
-function Search() {
+function Search({ updateSearchTerm }) {
+  const debounceCallback = useDebounce((e) => updateSearchTerm(e.target.value));
   return (
     <div className="search-wrapper">
       <input
@@ -9,6 +11,7 @@ function Search() {
         name=""
         id="pokemon-name-search"
         placeholder="Search Pokemon Name "
+        onChange={debounceCallback}
       />
     </div>
   );
