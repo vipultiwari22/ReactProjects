@@ -1,63 +1,64 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-function usepokemonList(url, type) {
+function usepokemonList(type) {
   const [pokemonListState, setPokemonListState] = useState({
     PokemonLists: [],
-    isLoding: true,
-    pokedexUrl: url,
+    isLoading: true,
+    pokedexUrl: `https://pokeapi.co/api/v2/pokemon`,
     nextUrl: "",
     prevUrl: "",
   });
 
   const downloadPokemon = async () => {
-    setPokemonListState({ ...pokemonListState, isLoding: true });
+    setPokemonListState({ ...pokemonListState, isLoading: true });
     try {
       const response = await axios.get(pokemonListState.pokedexUrl);
-      const Pokemonresults = response.data.results;
-      console.log("Pokemonresults", response.data.pokemon);
-      console.log(pokemonListState);
+      const pokemonResults = response.data.results;
+
       setPokemonListState((state) => ({
         ...state,
         nextUrl: response.data.next,
         prevUrl: response.data.previous,
       }));
+
       if (type) {
-        console.log("trperequested");
         setPokemonListState((state) => ({
           ...state,
-          PokemonLists: response.data.pokemon.slice(0, 5),
+          PokemonLists: pokemonResults.slice(0, 5),
+          isLoading: false,
         }));
       } else {
-        const pokemonResultPromise = Pokemonresults.map((pokemon) =>
+        const pokemonDataPromises = pokemonResults.map((pokemon) =>
           axios.get(pokemon.url)
         );
-        const pokemonData = await axios.all(pokemonResultPromise);
+        const pokemonDataResponses = await Promise.all(pokemonDataPromises);
 
-        const pokeListResult = pokemonData.map((pokeData) => ({
-          id: pokeData.data.id,
-          name: pokeData.data.name,
-          image: pokeData.data.sprites.other
-            ? pokeData.data.sprites.other.dream_world.front_default
-            : pokeData.data.sprites.front_shiny,
-          types: pokeData.data.types,
+        const pokeListResult = pokemonDataResponses.map((response) => ({
+          id: response.data.id,
+          name: response.data.name,
+          image: response.data.sprites.other
+            ? response.data.sprites.other.dream_world.front_default
+            : response.data.sprites.front_shiny,
+          types: response.data.types,
         }));
 
         setPokemonListState((state) => ({
           ...state,
           PokemonLists: pokeListResult,
-          isLoding: false,
+          isLoading: false,
         }));
       }
     } catch (error) {
       console.error("Error fetching Pokemon data:", error);
-      setPokemonListState({ ...pokemonListState, isLoding: false });
+      setPokemonListState({ ...pokemonListState, isLoading: false });
     }
   };
 
   useEffect(() => {
     downloadPokemon();
   }, [pokemonListState.pokedexUrl]);
+
   return [pokemonListState, setPokemonListState];
 }
 

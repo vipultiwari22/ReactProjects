@@ -85,9 +85,7 @@ import usepokemonList from "../Hooks/usePokemonList";
 // export default PokemonList;
 
 function PokemonList() {
-  const [pokemonListState, setPokemonListState] = usepokemonList(
-    `https://pokeapi.co/api/v2/pokemon`,false
-  );
+  const [pokemonListState, setPokemonListState] = usepokemonList(false);
   // Now we are clear the concept of useState wehn multiple useState using in one variable
 
   // const [pokemonlist, setpokemonlist] = useState([]);

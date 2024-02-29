@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
 }
-.poke-Name {
+.poke-details-Name {
   font-size: x-large;
   color: black;
   margin-top: 1rem;
@@ -11,19 +11,19 @@
 span {
   letter-spacing: 0.8rem;
 }
-.poke-types {
+.pokemon-details-types {
   display: flex;
   margin-top: 2rem;
   gap: 3rem;
   font-size: larger;
 }
-.poke-types div {
+.pokemon-details-types div {
   border: 1px solid gainsboro;
   border-radius: 15%;
   padding: 1rem;
   background-color: gainsboro;
 }
-.poke-images {
+.pokemon-details-image {
   max-height: 200px;
   margin-top: 2rem;
 }
