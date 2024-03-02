@@ -1,9 +1,27 @@
 import React, { useContext, useState } from "react";
 import Todo from "../Todo/Todo";
 import TodoContext from "../../TodoContext/TodoContext";
+import TodoDispatchContext from "../../TodoContext/TodoDispatchContext";
 
 function TodoList() {
-  const { List, setList } = useContext(TodoContext);
+  const { List } = useContext(TodoContext);
+  const { dispatch } = useContext(TodoDispatchContext);
+
+  function onFinished(todo, isFinished) {
+    dispatch({
+      type: "finish_todo",
+      payload: { todo, isFinished: isFinished },
+    });
+  }
+
+  function onDelete(todo) {
+    dispatch({ type: "delete_todo", payload: { todo } });
+  }
+
+  function onEdit(todo, todoText) {
+    dispatch({ type: "edit_todo", payload: { todo, todoText } });
+  }
+
   return (
     <div>
       {List.length > 0 &&
@@ -13,28 +31,9 @@ function TodoList() {
             id={todo.id}
             isFinished={todo.finished}
             Tododata={todo.todoData}
-            changeFinished={(isFinished) => {
-              const updatedList = List.map((t) => {
-                if (t.id == todo.id) {
-                  todo.finished = isFinished;
-                }
-                return t;
-              });
-              setList(updatedList);
-            }}
-            onDelete={() => {
-              const updatedList = List.filter((t) => t.id != todo.id);
-              setList(updatedList);
-            }}
-            onEdit={(todoText) => {
-              const updatedList = List.map((t) => {
-                if (t.id == todo.id) {
-                  todo.todoData = todoText;
-                }
-                return t;
-              });
-              setList(updatedList);
-            }}
+            changeFinished={(isFinished) => onFinished(todo, isFinished)}
+            onDelete={() => onDelete(todo)}
+            onEdit={(todoText) => onEdit(todo, todoText)}
           />
         ))}
     </div>
