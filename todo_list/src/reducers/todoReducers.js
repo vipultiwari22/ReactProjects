@@ -1,5 +1,5 @@
 // todoReducers.js
-function todoReducers(state, action) {
+function todoReducers(state = [], action) {
   if (action.type === "add_todo") {
     let todoText = action.payload.todoText;
     return [
